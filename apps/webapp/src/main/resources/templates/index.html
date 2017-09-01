@@ -1,0 +1,14 @@
+<!doctype html>
+<html xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+    <title>Bowling Genius</title>
+</head>
+<body>
+<div><span id="score-label">Score</span> <span id="score" th:text="${score}"></span></div>
+<form method="post">
+    <input id="pins" name="pins" type="number" />
+    <input id="bowl-button" type="submit" />
+</form>
+</body>
+</html>
