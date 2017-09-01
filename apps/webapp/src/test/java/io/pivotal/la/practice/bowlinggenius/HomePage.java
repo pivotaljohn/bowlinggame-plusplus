@@ -8,6 +8,7 @@ import java.io.IOException;
 public class HomePage {
 	private HtmlPage page;
 
+	private HtmlElement frame;
 	private HtmlElement scoreLabel;
 	private HtmlElement score;
 	private HtmlNumberInput pins;
@@ -23,6 +24,7 @@ public class HomePage {
 
 	private void bindDOMElementsToDataMembers(HtmlPage page) {
 		this.page = page;
+		frame = this.page.getHtmlElementById("frame");
 		scoreLabel = this.page.getHtmlElementById("score-label");
 		score = this.page.getHtmlElementById("score");
 		pins = this.page.getHtmlElementById("pins");
@@ -48,5 +50,9 @@ public class HomePage {
 
 	public HomePage clickSubmit() throws IOException {
 		return new HomePage((HtmlPage) button.click());
+	}
+
+	public int frame() {
+		return Integer.parseInt(frame.getTextContent());
 	}
 }

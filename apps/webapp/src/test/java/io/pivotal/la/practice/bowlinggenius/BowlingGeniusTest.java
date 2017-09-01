@@ -6,13 +6,16 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest
+@SpringBootTest
+@AutoConfigureMockMvc
 public class BowlingGeniusTest {
 
 	@Autowired
@@ -30,7 +33,13 @@ public class BowlingGeniusTest {
 	}
 
 	@Test
-	public void whenABowlIsMade_theScoreIsUpdated() throws Exception {
+	public void whenTheGameStarts_theFrameIs1() throws Exception {
+		HomePage homePage = HomePage.gotoUsing(webClient);
+		assertThat(homePage.frame()).isEqualTo(1);
+	}
+
+	@Test
+	public void whenABowlIsMade_updatesTheScore() throws Exception {
 		HomePage homePage = HomePage.gotoUsing(webClient)
 			.enterPins(5)
 			.clickSubmit();
@@ -39,7 +48,7 @@ public class BowlingGeniusTest {
 	}
 
 	@Test
-	public void whenMultipleBowlsAreMade_theScoreAccumulates() throws Exception {
+	public void whenMultipleBowlsAreMade_accumulatesTheScore() throws Exception {
 		HomePage homePage = HomePage.gotoUsing(webClient)
 			.enterPins(5)
 			.clickSubmit()
@@ -47,5 +56,17 @@ public class BowlingGeniusTest {
 			.clickSubmit();
 
 		assertThat(homePage.score()).isEqualTo(8);
+	}
+
+
+	@Test
+	public void asPlayProgresses_incrementsTheFrame() throws Exception {
+		HomePage homePage = HomePage.gotoUsing(webClient)
+			.enterPins(5)
+			.clickSubmit()
+			.enterPins(3)
+			.clickSubmit();
+
+		assertThat(homePage.frame()).isEqualTo(2);
 	}
 }
