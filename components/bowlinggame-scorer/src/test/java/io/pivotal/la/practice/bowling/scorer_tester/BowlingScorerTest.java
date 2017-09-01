@@ -15,4 +15,14 @@ public class BowlingScorerTest {
 		assertThat(game.score()).isEqualTo(0);
 	}
 
+	@Test
+	public void score_increasesWithEachBowl() throws Exception {
+		Game game = new Game();
+
+		game.bowl(5);
+		assertThat(game.score()).isEqualTo(5);
+
+		game.bowl(4);
+		assertThat(game.score()).isEqualTo(9);
+	}
 }
