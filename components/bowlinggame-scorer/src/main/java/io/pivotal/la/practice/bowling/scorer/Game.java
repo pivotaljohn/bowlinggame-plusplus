@@ -12,7 +12,7 @@ public class Game {
 
 	public void bowl(int pinsKnockedDown) throws IllegalBowlException {
 		if(pinsKnockedDown > pinsStanding) {
-			throw new IllegalBowlException();
+			throw new IllegalBowlException(pinsStanding, pinsKnockedDown);
 		}
 		score += pinsKnockedDown;
 		pinsStanding -= pinsKnockedDown;

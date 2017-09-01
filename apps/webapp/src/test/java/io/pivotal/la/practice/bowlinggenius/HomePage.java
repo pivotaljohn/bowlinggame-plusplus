@@ -1,15 +1,20 @@
 package io.pivotal.la.practice.bowlinggenius;
 
 import com.gargoylesoftware.htmlunit.WebClient;
-import com.gargoylesoftware.htmlunit.html.*;
+import com.gargoylesoftware.htmlunit.html.HtmlElement;
+import com.gargoylesoftware.htmlunit.html.HtmlNumberInput;
+import com.gargoylesoftware.htmlunit.html.HtmlPage;
+import com.gargoylesoftware.htmlunit.html.HtmlSubmitInput;
 
 import java.io.IOException;
+import java.util.Objects;
+import java.util.stream.StreamSupport;
 
-public class HomePage {
+class HomePage {
 	private HtmlPage page;
 
+	private HtmlElement status;
 	private HtmlElement frame;
-	private HtmlElement scoreLabel;
 	private HtmlElement score;
 	private HtmlNumberInput pins;
 	private HtmlSubmitInput button;
@@ -24,8 +29,8 @@ public class HomePage {
 
 	private void bindDOMElementsToDataMembers(HtmlPage page) {
 		this.page = page;
+		status = this.page.getHtmlElementById("status");
 		frame = this.page.getHtmlElementById("frame");
-		scoreLabel = this.page.getHtmlElementById("score-label");
 		score = this.page.getHtmlElementById("score");
 		pins = this.page.getHtmlElementById("pins");
 		button = this.page.getHtmlElementById("bowl-button");
@@ -33,10 +38,6 @@ public class HomePage {
 
 	public static HomePage gotoUsing(WebClient webClient) throws IOException {
 		return new HomePage(webClient);
-	}
-
-	public String scoreLabel() {
-		return scoreLabel.getTextContent();
 	}
 
 	public int score() {
@@ -54,5 +55,11 @@ public class HomePage {
 
 	public int frame() {
 		return Integer.parseInt(frame.getTextContent());
+	}
+
+	public boolean statusIsError() {
+		return StreamSupport.stream(status.getHtmlElementDescendants().spliterator(), false)
+			.anyMatch(he ->
+				Objects.equals(he.getAttribute("class"), "error"));
 	}
 }

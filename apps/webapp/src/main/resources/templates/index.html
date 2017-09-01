@@ -1,15 +1,23 @@
 <!doctype html>
 <html xmlns:th="http://www.w3.org/1999/xhtml">
 <head>
-    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8" />
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/>
     <title>Bowling Genius</title>
 </head>
 <body>
-<div><span id="frame" th:text="${frame}">0</span></div>
-<div><span id="score-label">Score</span> <span id="score" th:text="${score}"></span></div>
-<form method="post">
-    <input id="pins" name="pins" type="number" />
-    <input id="bowl-button" type="submit" />
+<div id="status">
+    <div th:errors="${bowlForm}" class="error"></div>
+</div>
+<div>
+    <span id="frame" th:text="${gameStatus.frame}">0</span>
+</div>
+<div>
+    <span id="score-label">Score</span>
+    <span id="score" th:text="${gameStatus.score}"></span>
+</div>
+<form method="post" th:object="${bowlForm}">
+    <input id="pins" th:field="*{pins}" type="number"/>
+    <input id="bowl-button" type="submit"/>
 </form>
 </body>
 </html>

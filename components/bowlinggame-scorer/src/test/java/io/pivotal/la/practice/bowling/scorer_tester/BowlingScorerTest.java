@@ -17,7 +17,7 @@ public class BowlingScorerTest {
 	}
 
 	@Test
-	public void theGameBeginsWithFrame1() throws Exception {
+	public void theGameBeginsAtFrame1() throws Exception {
 		Game game = new Game();
 		assertThat(game.frame()).isEqualTo(1);
 	}
@@ -32,7 +32,6 @@ public class BowlingScorerTest {
 		game.bowl(4);
 		assertThat(game.score()).isEqualTo(9);
 	}
-
 
 	@Test(expected = IllegalBowlException.class)
 	public void attemptingToRecordMorePinsKnockedDownThanPossible_isProhibited() throws Exception {
