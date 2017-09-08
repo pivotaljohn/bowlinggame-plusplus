@@ -5,10 +5,8 @@ public class Game {
 	private int pinsStanding = 10;
 	private int frame = 1;
 	private int bowlsInFrame = 0;
-	private int bonus1 = 0;
-	private int pendingBonus1Count = 0;
-	private int bonus2 = 0;
-	private int pendingBonus2Count = 0;
+	private Bonus bonus1 = new Bonus();
+	private Bonus bonus2 = new Bonus();
 	private int extraBowl = 0;
 
 	public int score() {
@@ -26,40 +24,40 @@ public class Game {
 		pinsStanding -= pinsKnockedDownThisBowl;
 		bowlsInFrame++;
 
-		if (pendingBonus1Count > 0) {
-			bonus1 += pinsKnockedDownThisBowl;
-			pendingBonus1Count--;
-			if (pendingBonus1Count == 0) {
-				score += bonus1;
+		if (bonus1.pendingBonusCount > 0) {
+			bonus1.bonus += pinsKnockedDownThisBowl;
+			bonus1.pendingBonusCount--;
+			if (bonus1.pendingBonusCount == 0) {
+				score += bonus1.bonus;
 			}
 		}
-		if (pendingBonus2Count > 0) {
-			bonus2 += pinsKnockedDownThisBowl;
-			pendingBonus2Count--;
-			if (pendingBonus2Count == 0) {
-				score += bonus2;
+		if (bonus2.pendingBonusCount > 0) {
+			bonus2.bonus += pinsKnockedDownThisBowl;
+			bonus2.pendingBonusCount--;
+			if (bonus2.pendingBonusCount == 0) {
+				score += bonus2.bonus;
 			}
 		}
 		if (frame < 10) {
 			if (pinsStanding == 0) {
 				if (bowlsInFrame == 1) {
-					if (pendingBonus1Count == 0) {
-						bonus1 = 0;
-						pendingBonus1Count = 2;
+					if (bonus1.pendingBonusCount == 0) {
+						bonus1.bonus = 0;
+						bonus1.pendingBonusCount = 2;
 					} else {
-						bonus2 = 0;
-						pendingBonus2Count = 2;
+						bonus2.bonus = 0;
+						bonus2.pendingBonusCount = 2;
 					}
 					frame++;
 					pinsStanding = 10;
 					bowlsInFrame = 0;
 				} else {
-					if (pendingBonus1Count == 0) {
-						bonus1 = 0;
-						pendingBonus1Count = 1;
+					if (bonus1.pendingBonusCount == 0) {
+						bonus1.bonus = 0;
+						bonus1.pendingBonusCount = 1;
 					} else {
-						bonus2 = 0;
-						pendingBonus2Count = 1;
+						bonus2.bonus = 0;
+						bonus2.pendingBonusCount = 1;
 					}
 					frame++;
 					pinsStanding = 10;
@@ -91,4 +89,9 @@ public class Game {
 	public boolean isOver() {
 		return frame == 11;
 	}
+}
+
+class Bonus {
+	int bonus;
+	int pendingBonusCount;
 }
