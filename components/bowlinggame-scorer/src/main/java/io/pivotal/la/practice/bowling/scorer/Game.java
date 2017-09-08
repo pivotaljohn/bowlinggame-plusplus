@@ -6,12 +6,10 @@ import java.util.List;
 public class Game {
 	private int extraBowl = 0;
 	private List<Frame> frames;
-	private Frame currentFrame;
 
 	public Game() {
 		frames = new ArrayList<>();
-		currentFrame = Frame.first();
-		frames.add(currentFrame);
+		frames.add(Frame.first());
 	}
 
 	public int score() {
@@ -22,24 +20,22 @@ public class Game {
 		if (isOver()) {
 			throw new GameOverException();
 		}
-		if (pinsKnockedDown > currentFrame.pinsLeft) {
-			throw new IllegalBowlException(currentFrame.pinsLeft, pinsKnockedDown);
+		if (pinsKnockedDown > getCurrentFrame().pinsLeft) {
+			throw new IllegalBowlException(getCurrentFrame().pinsLeft, pinsKnockedDown);
 		}
-		currentFrame.bowl(pinsKnockedDown);
+		getCurrentFrame().bowl(pinsKnockedDown);
 
 		if (frames.size() < 10) {
-			if (currentFrame.pinsLeft == 0 || currentFrame.bowls == 2) {
-				currentFrame = new Frame(currentFrame);
-				frames.add(currentFrame);
+			if (getCurrentFrame().isOver()) {
+				frames.add(new Frame(getCurrentFrame()));
 			}
 		} else {
-			if (currentFrame.pinsLeft == 0) {
-				currentFrame.pinsLeft = 10;
+			if (getCurrentFrame().pinsLeft == 0) {
+				getCurrentFrame().pinsLeft = 10;
 				extraBowl = 1;
 			}
-			if (currentFrame.bowls == (2 + extraBowl)) {
-				currentFrame = new Frame(currentFrame);
-				frames.add(currentFrame);
+			if (getCurrentFrame().bowls == (2 + extraBowl)) {
+				frames.add(new Frame(getCurrentFrame()));
 			}
 		}
 	}
@@ -50,6 +46,10 @@ public class Game {
 
 	public boolean isOver() {
 		return frames.size() == 11;
+	}
+
+	private Frame getCurrentFrame() {
+		return frames.get(frames.size() - 1);
 	}
 }
 
@@ -79,14 +79,12 @@ class Frame {
 		bowls++;
 		previous.applyBonusIfApplicable(pinsKnockedDown);
 		if (pinsLeft == 0) {
-			if (bowls == 1) {
-				bonus = 0;
-				pendingBonusCount = 2;
-			} else {
-				bonus = 0;
-				pendingBonusCount = 1;
-			}
+			pendingBonusCount = 3 - bowls;
 		}
+	}
+
+	public boolean isOver() {
+		return pinsLeft == 0 || bowls == 2;
 	}
 
 	protected void applyBonusIfApplicable(int pinsKnockedDown) {
@@ -109,9 +107,4 @@ class NullFrame extends Frame {
 	@Override
 	protected void applyBonusIfApplicable(int pinsKnockedDown) {
 	}
-}
-
-class Bonus {
-	int bonus;
-	int pendingBonusCount;
 }
