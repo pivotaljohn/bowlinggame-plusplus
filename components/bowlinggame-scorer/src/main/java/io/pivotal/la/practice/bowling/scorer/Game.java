@@ -1,5 +1,8 @@
 package io.pivotal.la.practice.bowling.scorer;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Game {
 	private int score = 0;
 	private int pinsStanding = 10;
@@ -8,6 +11,12 @@ public class Game {
 	private Bonus bonus1 = new Bonus();
 	private Bonus bonus2 = new Bonus();
 	private int extraBowl = 0;
+	private List<Frame> frames;
+
+	public Game() {
+		frames = new ArrayList<>();
+		frames.add(new Frame());
+	}
 
 	public int score() {
 		return score;
@@ -38,7 +47,7 @@ public class Game {
 				score += bonus2.bonus;
 			}
 		}
-		if (frame < 10) {
+		if (frames.size() < 10) {
 			if (pinsStanding == 0) {
 				if (bowlsInFrame == 1) {
 					if (bonus1.pendingBonusCount == 0) {
@@ -48,7 +57,7 @@ public class Game {
 						bonus2.bonus = 0;
 						bonus2.pendingBonusCount = 2;
 					}
-					frame++;
+					frames.add(new Frame());
 					pinsStanding = 10;
 					bowlsInFrame = 0;
 				} else {
@@ -59,13 +68,13 @@ public class Game {
 						bonus2.bonus = 0;
 						bonus2.pendingBonusCount = 1;
 					}
-					frame++;
+					frames.add(new Frame());
 					pinsStanding = 10;
 					bowlsInFrame = 0;
 				}
 			}
 			if (bowlsInFrame == 2) {
-				frame++;
+				frames.add(new Frame());
 				pinsStanding = 10;
 				bowlsInFrame = 0;
 			}
@@ -75,7 +84,7 @@ public class Game {
 				extraBowl = 1;
 			}
 			if (bowlsInFrame == (2 + extraBowl)) {
-				frame++;
+				frames.add(new Frame());
 				pinsStanding = 10;
 				bowlsInFrame = 0;
 			}
@@ -83,12 +92,15 @@ public class Game {
 	}
 
 	public int frame() {
-		return frame;
+		return frames.size();
 	}
 
 	public boolean isOver() {
-		return frame == 11;
+		return frames.size() == 11;
 	}
+}
+
+class Frame {
 }
 
 class Bonus {
