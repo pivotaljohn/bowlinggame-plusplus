@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Game {
-	private int extraBowl = 0;
 	private List<Frame> frames;
 
 	public Game() {
@@ -20,22 +19,15 @@ public class Game {
 		if (isOver()) {
 			throw new GameOverException();
 		}
-		if (pinsKnockedDown > getCurrentFrame().pinsLeft) {
-			throw new IllegalBowlException(getCurrentFrame().pinsLeft, pinsKnockedDown);
+		if (pinsKnockedDown > currentFrame().pinsLeft) {
+			throw new IllegalBowlException(currentFrame().pinsLeft, pinsKnockedDown);
 		}
-		getCurrentFrame().bowl(pinsKnockedDown);
-
-		if (frames.size() < 10) {
-			if (getCurrentFrame().isOver()) {
-				frames.add(new Frame(getCurrentFrame()));
-			}
-		} else {
-			if (getCurrentFrame().pinsLeft == 0) {
-				getCurrentFrame().pinsLeft = 10;
-				extraBowl = 1;
-			}
-			if (getCurrentFrame().bowls == (2 + extraBowl)) {
-				frames.add(new Frame(getCurrentFrame()));
+		currentFrame().bowl(pinsKnockedDown);
+		if (currentFrame().isOver()) {
+			if (frames.size() == 9) {
+				frames.add(new TenthFrame(currentFrame()));
+			} else {
+				frames.add(new Frame(currentFrame()));
 			}
 		}
 	}
@@ -48,7 +40,7 @@ public class Game {
 		return frames.size() == 11;
 	}
 
-	private Frame getCurrentFrame() {
+	private Frame currentFrame() {
 		return frames.get(frames.size() - 1);
 	}
 }
@@ -79,8 +71,12 @@ class Frame {
 		bowls++;
 		previous.applyBonusIfApplicable(pinsKnockedDown);
 		if (pinsLeft == 0) {
-			pendingBonusCount = 3 - bowls;
+			handleAllPinsKnockedDown();
 		}
+	}
+
+	protected void handleAllPinsKnockedDown() {
+		pendingBonusCount = 3 - bowls;
 	}
 
 	public boolean isOver() {
@@ -96,6 +92,25 @@ class Frame {
 			}
 		}
 		previous.applyBonusIfApplicable(pinsKnockedDown);
+	}
+}
+
+class TenthFrame extends Frame {
+	private int extraBowl = 0;
+
+	public TenthFrame(Frame previous) {
+		super(previous);
+	}
+
+	@Override
+	public boolean isOver() {
+		return bowls == 2 + extraBowl;
+	}
+
+	@Override
+	protected void handleAllPinsKnockedDown() {
+		pinsLeft = 10;
+		extraBowl = 1;
 	}
 }
 
