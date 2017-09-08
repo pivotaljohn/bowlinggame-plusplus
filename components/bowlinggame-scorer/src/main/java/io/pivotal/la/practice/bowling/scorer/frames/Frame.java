@@ -1,4 +1,4 @@
-package io.pivotal.la.practice.bowling.scorer;
+package io.pivotal.la.practice.bowling.scorer.frames;
 
 public abstract class Frame {
 	private Frame previous;

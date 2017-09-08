@@ -1,5 +1,7 @@
 package io.pivotal.la.practice.bowling.scorer;
 
+import io.pivotal.la.practice.bowling.scorer.frames.Frame;
+
 public class Game {
 	private Frame currentFrame;
 

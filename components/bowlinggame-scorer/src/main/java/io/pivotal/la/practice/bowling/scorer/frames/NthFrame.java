@@ -1,4 +1,4 @@
-package io.pivotal.la.practice.bowling.scorer;
+package io.pivotal.la.practice.bowling.scorer.frames;
 
 class NthFrame extends Frame {
 	private int pendingBonuses = 0;

@@ -1,4 +1,4 @@
-package io.pivotal.la.practice.bowling.scorer;
+package io.pivotal.la.practice.bowling.scorer.frames;
 
 class NullFrame extends Frame {
 	NullFrame() {
