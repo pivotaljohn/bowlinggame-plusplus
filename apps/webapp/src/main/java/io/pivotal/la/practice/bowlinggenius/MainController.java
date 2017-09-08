@@ -1,6 +1,7 @@
 package io.pivotal.la.practice.bowlinggenius;
 
 import io.pivotal.la.practice.bowling.scorer.Game;
+import io.pivotal.la.practice.bowling.scorer.GameOverException;
 import io.pivotal.la.practice.bowling.scorer.IllegalBowlException;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -40,6 +41,8 @@ class MainController {
 				format("Sorry, there's no way you knocked down %d pins; there were only %d standing!",
 				e.getPinsClaimedToBeKnockedDown(),
 				e.getPinsStanding()));
+		} catch (GameOverException e) {
+			bowlFormBR.reject("BOWL-0002", "Sorry, this game is over.  Close your browser and try again.");
 		}
 		return new ModelAndView("index", "gameStatus", transformer.statusFrom(game));
 	}
