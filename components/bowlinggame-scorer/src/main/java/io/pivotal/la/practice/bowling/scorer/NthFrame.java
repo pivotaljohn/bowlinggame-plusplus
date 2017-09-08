@@ -1,11 +1,16 @@
 package io.pivotal.la.practice.bowling.scorer;
 
 class NthFrame extends Frame {
-	private int pendingBonusCount = 0;
+	private int pendingBonuses = 0;
 	private int bonus = 0;
 
-	public NthFrame(Frame previous) {
+	NthFrame(Frame previous) {
 		super(previous);
+	}
+
+	@Override
+	public Frame nextFrame() {
+		return number < 9 ? new NthFrame(this) : new TenthFrame(this);
 	}
 
 	@Override
@@ -16,10 +21,10 @@ class NthFrame extends Frame {
 	@Override
 	protected void applyAnyBonuses(int pinsKnockedDown) {
 		super.applyAnyBonuses(pinsKnockedDown);
-		if (pendingBonusCount > 0) {
+		if (pendingBonuses > 0) {
 			bonus += pinsKnockedDown;
-			pendingBonusCount--;
-			if (pendingBonusCount == 0) {
+			pendingBonuses--;
+			if (pendingBonuses == 0) {
 				score += bonus;
 			}
 		}
@@ -27,6 +32,6 @@ class NthFrame extends Frame {
 
 	@Override
 	protected void handleAllPinsKnockedDown() {
-		pendingBonusCount = 3 - bowls;
+		pendingBonuses = 1 + (2 - bowls);
 	}
 }

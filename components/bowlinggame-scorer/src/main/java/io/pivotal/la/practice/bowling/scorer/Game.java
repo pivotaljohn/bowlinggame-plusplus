@@ -26,7 +26,7 @@ public class Game {
 	}
 
 	public boolean isOver() {
-		return currentFrame.number() == 11;
+		return currentFrame.isOver();
 	}
 }
 

@@ -3,8 +3,13 @@ package io.pivotal.la.practice.bowling.scorer;
 class TenthFrame extends Frame {
 	private int extraBowl = 0;
 
-	public TenthFrame(Frame previous) {
+	TenthFrame(Frame previous) {
 		super(previous);
+	}
+
+	@Override
+	public Frame nextFrame() {
+		return this;
 	}
 
 	@Override

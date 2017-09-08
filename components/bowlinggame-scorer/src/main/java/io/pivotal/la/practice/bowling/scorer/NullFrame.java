@@ -1,13 +1,18 @@
 package io.pivotal.la.practice.bowling.scorer;
 
 class NullFrame extends Frame {
-	public NullFrame() {
+	NullFrame() {
 		super(null);
 		number = 0;
 	}
 
 	@Override
 	protected void handleAllPinsKnockedDown() {
+	}
+
+	@Override
+	public Frame nextFrame() {
+		return new NthFrame(this);
 	}
 
 	@Override

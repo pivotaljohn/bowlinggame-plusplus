@@ -1,24 +1,25 @@
 package io.pivotal.la.practice.bowling.scorer;
 
-abstract class Frame {
+public abstract class Frame {
 	private Frame previous;
-	int bowls = 0;
-	int pinsLeft = 10;
-	int score = 0;
+	int bowls;
+	int pinsLeft;
+	int score;
 	int number;
 
 	public static Frame first() {
-		return new NthFrame(new NullFrame());
-	}
-
-	public Frame next() {
-		return number < 9 ? new NthFrame(this) : new TenthFrame(this);
+		return new NullFrame().nextFrame();
 	}
 
 	public Frame(Frame previous) {
 		this.previous = previous;
+		this.bowls = 0;
+		this.pinsLeft = 10;
+		this.score = 0;
 		this.number = previous != null ? previous.number + 1 : 1;
 	}
+
+	public abstract Frame nextFrame();
 
 	public int number() {
 		return number;
@@ -40,7 +41,7 @@ abstract class Frame {
 		if (pinsLeft == 0) {
 			handleAllPinsKnockedDown();
 		}
-		return isOver() ? next() : this;
+		return isOver() ? nextFrame() : this;
 	}
 
 	public abstract boolean isOver();
