@@ -12,7 +12,7 @@ public class Game {
 
 	public Game() {
 		frames = new ArrayList<>();
-		currentFrame = new Frame();
+		currentFrame = Frame.first();
 		frames.add(currentFrame);
 	}
 
@@ -53,8 +53,6 @@ public class Game {
 						bonus2.bonus = 0;
 						bonus2.pendingBonusCount = 2;
 					}
-					currentFrame = new Frame();
-					frames.add(currentFrame);
 				} else {
 					if (bonus1.pendingBonusCount == 0) {
 						bonus1.bonus = 0;
@@ -63,12 +61,10 @@ public class Game {
 						bonus2.bonus = 0;
 						bonus2.pendingBonusCount = 1;
 					}
-					currentFrame = new Frame();
-					frames.add(currentFrame);
 				}
 			}
-			if (currentFrame.bowls == 2) {
-				currentFrame = new Frame();
+			if (currentFrame.pinsLeft == 0 || currentFrame.bowls == 2) {
+				currentFrame = new Frame(currentFrame);
 				frames.add(currentFrame);
 			}
 		} else {
@@ -77,7 +73,7 @@ public class Game {
 				extraBowl = 1;
 			}
 			if (currentFrame.bowls == (2 + extraBowl)) {
-				currentFrame = new Frame();
+				currentFrame = new Frame(currentFrame);
 				frames.add(currentFrame);
 			}
 		}
@@ -96,6 +92,17 @@ class Frame {
 	int bowls = 0;
 	int pinsLeft = 10;
 	int score = 0;
+	int pendingBonusCount = 0;
+	int bonus = 0;
+	Frame previous;
+
+	public static Frame first() {
+		return new Frame(new NullFrame());
+	}
+
+	public Frame(Frame previous) {
+		this.previous = previous;
+	}
 
 	public int score() {
 		return score;
@@ -105,6 +112,12 @@ class Frame {
 		score += pinsKnockedDown;
 		pinsLeft -= pinsKnockedDown;
 		bowls++;
+	}
+}
+
+class NullFrame extends Frame {
+	public NullFrame() {
+		super(null);
 	}
 }
 
