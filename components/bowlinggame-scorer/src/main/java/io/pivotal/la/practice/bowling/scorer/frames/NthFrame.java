@@ -20,11 +20,10 @@ class NthFrame extends Frame {
 
 	@Override
 	protected void applyAnyBonuses(int pinsKnockedDown) {
-		super.applyAnyBonuses(pinsKnockedDown);
+		previous.applyAnyBonuses(pinsKnockedDown);
 		if (pendingBonuses > 0) {
 			bonus += pinsKnockedDown;
-			pendingBonuses--;
-			if (pendingBonuses == 0) {
+			if (--pendingBonuses == 0) {
 				score += bonus;
 			}
 		}

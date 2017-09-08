@@ -1,7 +1,8 @@
 package io.pivotal.la.practice.bowling.scorer.frames;
 
 public abstract class Frame {
-	private Frame previous;
+	static final int PINS_IN_FRAME = 10;
+	Frame previous;
 	int bowls;
 	int pinsLeft;
 	int score;
@@ -14,7 +15,7 @@ public abstract class Frame {
 	public Frame(Frame previous) {
 		this.previous = previous;
 		this.bowls = 0;
-		this.pinsLeft = 10;
+		this.pinsLeft = PINS_IN_FRAME;
 		this.score = 0;
 		this.number = previous != null ? previous.number + 1 : 1;
 	}

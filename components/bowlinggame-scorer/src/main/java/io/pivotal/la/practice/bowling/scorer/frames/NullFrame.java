@@ -7,10 +7,6 @@ class NullFrame extends Frame {
 	}
 
 	@Override
-	protected void handleAllPinsKnockedDown() {
-	}
-
-	@Override
 	public Frame nextFrame() {
 		return new NthFrame(this);
 	}
@@ -27,5 +23,9 @@ class NullFrame extends Frame {
 
 	@Override
 	protected void applyAnyBonuses(int pinsKnockedDown) {
+	}
+
+	@Override
+	protected void handleAllPinsKnockedDown() {
 	}
 }

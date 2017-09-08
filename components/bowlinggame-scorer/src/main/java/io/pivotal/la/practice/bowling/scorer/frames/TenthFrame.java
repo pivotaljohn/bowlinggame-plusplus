@@ -19,7 +19,7 @@ class TenthFrame extends Frame {
 
 	@Override
 	protected void handleAllPinsKnockedDown() {
-		pinsLeft = 10;
+		pinsLeft = PINS_IN_FRAME;
 		extraBowl = 1;
 	}
 }
