@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Game {
-	private int score = 0;
 	private Bonus bonus1 = new Bonus();
 	private Bonus bonus2 = new Bonus();
 	private int extraBowl = 0;
@@ -18,36 +17,36 @@ public class Game {
 	}
 
 	public int score() {
-		return score;
+		return frames.stream().mapToInt(Frame::score).sum();
 	}
 
 	public void bowl(int pinsKnockedDownThisBowl) throws IllegalBowlException, GameOverException {
 		if (isOver()) {
 			throw new GameOverException();
 		}
-		if (pinsKnockedDownThisBowl > currentFrame.pinsStanding) {
-			throw new IllegalBowlException(currentFrame.pinsStanding, pinsKnockedDownThisBowl);
+		if (pinsKnockedDownThisBowl > currentFrame.pinsLeft) {
+			throw new IllegalBowlException(currentFrame.pinsLeft, pinsKnockedDownThisBowl);
 		}
-		score += pinsKnockedDownThisBowl;
-		currentFrame.pinsStanding -= pinsKnockedDownThisBowl;
+		currentFrame.score += pinsKnockedDownThisBowl;
+		currentFrame.pinsLeft -= pinsKnockedDownThisBowl;
 		currentFrame.bowls++;
 
 		if (bonus1.pendingBonusCount > 0) {
 			bonus1.bonus += pinsKnockedDownThisBowl;
 			bonus1.pendingBonusCount--;
 			if (bonus1.pendingBonusCount == 0) {
-				score += bonus1.bonus;
+				currentFrame.score += bonus1.bonus;
 			}
 		}
 		if (bonus2.pendingBonusCount > 0) {
 			bonus2.bonus += pinsKnockedDownThisBowl;
 			bonus2.pendingBonusCount--;
 			if (bonus2.pendingBonusCount == 0) {
-				score += bonus2.bonus;
+				currentFrame.score += bonus2.bonus;
 			}
 		}
 		if (frames.size() < 10) {
-			if (currentFrame.pinsStanding == 0) {
+			if (currentFrame.pinsLeft == 0) {
 				if (currentFrame.bowls == 1) {
 					if (bonus1.pendingBonusCount == 0) {
 						bonus1.bonus = 0;
@@ -75,8 +74,8 @@ public class Game {
 				frames.add(currentFrame);
 			}
 		} else {
-			if (currentFrame.pinsStanding == 0) {
-				currentFrame.pinsStanding = 10;
+			if (currentFrame.pinsLeft == 0) {
+				currentFrame.pinsLeft = 10;
 				extraBowl = 1;
 			}
 			if (currentFrame.bowls == (2 + extraBowl)) {
@@ -97,7 +96,12 @@ public class Game {
 
 class Frame {
 	int bowls = 0;
-	int pinsStanding = 10;
+	int pinsLeft = 10;
+	int score = 0;
+
+	public int score() {
+		return score;
+	}
 }
 
 class Bonus {
