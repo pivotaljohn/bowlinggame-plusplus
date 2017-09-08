@@ -1,47 +1,32 @@
 package io.pivotal.la.practice.bowling.scorer;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class Game {
-	private List<Frame> frames;
+	private Frame currentFrame;
 
 	public Game() {
-		frames = new ArrayList<>();
-		frames.add(Frame.first());
+		currentFrame = Frame.first();
 	}
 
 	public int score() {
-		return frames.stream().mapToInt(Frame::score).sum();
+		return currentFrame.total();
 	}
 
 	public void bowl(int pinsKnockedDown) throws IllegalBowlException, GameOverException {
 		if (isOver()) {
 			throw new GameOverException();
 		}
-		if (pinsKnockedDown > currentFrame().pinsLeft()) {
-			throw new IllegalBowlException(currentFrame().pinsLeft(), pinsKnockedDown);
+		if (pinsKnockedDown > currentFrame.pinsLeft()) {
+			throw new IllegalBowlException(currentFrame.pinsLeft(), pinsKnockedDown);
 		}
-		currentFrame().bowl(pinsKnockedDown);
-		if (currentFrame().isOver()) {
-			if (frames.size() == 9) {
-				frames.add(new TenthFrame(currentFrame()));
-			} else {
-				frames.add(new NthFrame(currentFrame()));
-			}
-		}
+		currentFrame = currentFrame.bowl(pinsKnockedDown);
 	}
 
 	public int frame() {
-		return frames.size();
+		return currentFrame.number();
 	}
 
 	public boolean isOver() {
-		return frames.size() == 11;
-	}
-
-	private Frame currentFrame() {
-		return frames.get(frames.size() - 1);
+		return currentFrame.number() == 11;
 	}
 }
 

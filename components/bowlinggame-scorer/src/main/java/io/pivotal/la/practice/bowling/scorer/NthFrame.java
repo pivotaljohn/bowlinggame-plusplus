@@ -14,8 +14,8 @@ class NthFrame extends Frame {
 	}
 
 	@Override
-	protected void applyBonusIfApplicable(int pinsKnockedDown) {
-		super.applyBonusIfApplicable(pinsKnockedDown);
+	protected void applyAnyBonuses(int pinsKnockedDown) {
+		super.applyAnyBonuses(pinsKnockedDown);
 		if (pendingBonusCount > 0) {
 			bonus += pinsKnockedDown;
 			pendingBonusCount--;
