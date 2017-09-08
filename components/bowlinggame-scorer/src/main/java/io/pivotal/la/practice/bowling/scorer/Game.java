@@ -20,26 +20,24 @@ public class Game {
 		return frames.stream().mapToInt(Frame::score).sum();
 	}
 
-	public void bowl(int pinsKnockedDownThisBowl) throws IllegalBowlException, GameOverException {
+	public void bowl(int pinsKnockedDown) throws IllegalBowlException, GameOverException {
 		if (isOver()) {
 			throw new GameOverException();
 		}
-		if (pinsKnockedDownThisBowl > currentFrame.pinsLeft) {
-			throw new IllegalBowlException(currentFrame.pinsLeft, pinsKnockedDownThisBowl);
+		if (pinsKnockedDown > currentFrame.pinsLeft) {
+			throw new IllegalBowlException(currentFrame.pinsLeft, pinsKnockedDown);
 		}
-		currentFrame.score += pinsKnockedDownThisBowl;
-		currentFrame.pinsLeft -= pinsKnockedDownThisBowl;
-		currentFrame.bowls++;
+		currentFrame.bowl(pinsKnockedDown);
 
 		if (bonus1.pendingBonusCount > 0) {
-			bonus1.bonus += pinsKnockedDownThisBowl;
+			bonus1.bonus += pinsKnockedDown;
 			bonus1.pendingBonusCount--;
 			if (bonus1.pendingBonusCount == 0) {
 				currentFrame.score += bonus1.bonus;
 			}
 		}
 		if (bonus2.pendingBonusCount > 0) {
-			bonus2.bonus += pinsKnockedDownThisBowl;
+			bonus2.bonus += pinsKnockedDown;
 			bonus2.pendingBonusCount--;
 			if (bonus2.pendingBonusCount == 0) {
 				currentFrame.score += bonus2.bonus;
@@ -101,6 +99,12 @@ class Frame {
 
 	public int score() {
 		return score;
+	}
+
+	public void bowl(int pinsKnockedDown) {
+		score += pinsKnockedDown;
+		pinsLeft -= pinsKnockedDown;
+		bowls++;
 	}
 }
 
