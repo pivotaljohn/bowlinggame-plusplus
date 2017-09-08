@@ -19,15 +19,15 @@ public class Game {
 		if (isOver()) {
 			throw new GameOverException();
 		}
-		if (pinsKnockedDown > currentFrame().pinsLeft) {
-			throw new IllegalBowlException(currentFrame().pinsLeft, pinsKnockedDown);
+		if (pinsKnockedDown > currentFrame().pinsLeft()) {
+			throw new IllegalBowlException(currentFrame().pinsLeft(), pinsKnockedDown);
 		}
 		currentFrame().bowl(pinsKnockedDown);
 		if (currentFrame().isOver()) {
 			if (frames.size() == 9) {
 				frames.add(new TenthFrame(currentFrame()));
 			} else {
-				frames.add(new Frame(currentFrame()));
+				frames.add(new NthFrame(currentFrame()));
 			}
 		}
 	}
@@ -45,16 +45,14 @@ public class Game {
 	}
 }
 
-class Frame {
+abstract class Frame {
+	private Frame previous;
 	int bowls = 0;
 	int pinsLeft = 10;
-	private int score = 0;
-	private int pendingBonusCount = 0;
-	private int bonus = 0;
-	private Frame previous;
+	int score = 0;
 
 	public static Frame first() {
-		return new Frame(new NullFrame());
+		return new NthFrame(new NullFrame());
 	}
 
 	public Frame(Frame previous) {
@@ -63,6 +61,10 @@ class Frame {
 
 	public int score() {
 		return score;
+	}
+
+	public int pinsLeft() {
+		return pinsLeft;
 	}
 
 	public void bowl(int pinsKnockedDown) {
@@ -75,15 +77,31 @@ class Frame {
 		}
 	}
 
-	protected void handleAllPinsKnockedDown() {
-		pendingBonusCount = 3 - bowls;
+	public abstract boolean isOver();
+
+	protected void applyBonusIfApplicable(int pinsKnockedDown) {
+		previous.applyBonusIfApplicable(pinsKnockedDown);
 	}
 
+	protected abstract void handleAllPinsKnockedDown();
+}
+
+class NthFrame extends Frame {
+	private int pendingBonusCount = 0;
+	private int bonus = 0;
+
+	public NthFrame(Frame previous) {
+		super(previous);
+	}
+
+	@Override
 	public boolean isOver() {
 		return pinsLeft == 0 || bowls == 2;
 	}
 
+	@Override
 	protected void applyBonusIfApplicable(int pinsKnockedDown) {
+		super.applyBonusIfApplicable(pinsKnockedDown);
 		if (pendingBonusCount > 0) {
 			bonus += pinsKnockedDown;
 			pendingBonusCount--;
@@ -91,7 +109,11 @@ class Frame {
 				score += bonus;
 			}
 		}
-		previous.applyBonusIfApplicable(pinsKnockedDown);
+	}
+
+	@Override
+	protected void handleAllPinsKnockedDown() {
+		pendingBonusCount = 3 - bowls;
 	}
 }
 
@@ -117,6 +139,15 @@ class TenthFrame extends Frame {
 class NullFrame extends Frame {
 	public NullFrame() {
 		super(null);
+	}
+
+	@Override
+	protected void handleAllPinsKnockedDown() {
+	}
+
+	@Override
+	public boolean isOver() {
+		return true;
 	}
 
 	@Override
