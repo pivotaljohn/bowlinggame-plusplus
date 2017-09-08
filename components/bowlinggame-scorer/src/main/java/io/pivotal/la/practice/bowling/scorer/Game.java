@@ -5,8 +5,6 @@ import java.util.List;
 
 public class Game {
 	private int score = 0;
-	private int pinsStanding = 10;
-	private int frame = 1;
 	private Bonus bonus1 = new Bonus();
 	private Bonus bonus2 = new Bonus();
 	private int extraBowl = 0;
@@ -27,11 +25,11 @@ public class Game {
 		if (isOver()) {
 			throw new GameOverException();
 		}
-		if (pinsKnockedDownThisBowl > pinsStanding) {
-			throw new IllegalBowlException(pinsStanding, pinsKnockedDownThisBowl);
+		if (pinsKnockedDownThisBowl > currentFrame.pinsStanding) {
+			throw new IllegalBowlException(currentFrame.pinsStanding, pinsKnockedDownThisBowl);
 		}
 		score += pinsKnockedDownThisBowl;
-		pinsStanding -= pinsKnockedDownThisBowl;
+		currentFrame.pinsStanding -= pinsKnockedDownThisBowl;
 		currentFrame.bowls++;
 
 		if (bonus1.pendingBonusCount > 0) {
@@ -49,7 +47,7 @@ public class Game {
 			}
 		}
 		if (frames.size() < 10) {
-			if (pinsStanding == 0) {
+			if (currentFrame.pinsStanding == 0) {
 				if (currentFrame.bowls == 1) {
 					if (bonus1.pendingBonusCount == 0) {
 						bonus1.bonus = 0;
@@ -60,7 +58,6 @@ public class Game {
 					}
 					currentFrame = new Frame();
 					frames.add(currentFrame);
-					pinsStanding = 10;
 				} else {
 					if (bonus1.pendingBonusCount == 0) {
 						bonus1.bonus = 0;
@@ -71,23 +68,20 @@ public class Game {
 					}
 					currentFrame = new Frame();
 					frames.add(currentFrame);
-					pinsStanding = 10;
 				}
 			}
 			if (currentFrame.bowls == 2) {
 				currentFrame = new Frame();
 				frames.add(currentFrame);
-				pinsStanding = 10;
 			}
 		} else {
-			if (pinsStanding == 0) {
-				pinsStanding = 10;
+			if (currentFrame.pinsStanding == 0) {
+				currentFrame.pinsStanding = 10;
 				extraBowl = 1;
 			}
 			if (currentFrame.bowls == (2 + extraBowl)) {
 				currentFrame = new Frame();
 				frames.add(currentFrame);
-				pinsStanding = 10;
 			}
 		}
 	}
@@ -103,6 +97,7 @@ public class Game {
 
 class Frame {
 	int bowls = 0;
+	int pinsStanding = 10;
 }
 
 class Bonus {
